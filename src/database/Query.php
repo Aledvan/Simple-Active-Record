@@ -1,8 +1,8 @@
 <?php
 
-namespace MsAmgbp\Src\Database;
+namespace Src\Database;
 
-use MsAmgbp\Src\Database\Connection;
+use Src\Database\Connection;
 
 class Query
 {
