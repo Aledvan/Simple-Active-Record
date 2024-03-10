@@ -4,23 +4,23 @@ namespace Src\Database;
 
 use Src\Database\Query;
 
-class Db
+class Db extends Query
 {
-    private $query;
+    private static $query;
 
     public function __construct()
     {
-        self::query = Query::execute;
+        self::$query = new Query();
     }
 
     /**
      * Insert new lines and values in table
      *
-     * @param string $tableName
+     * @param string $table
      * @param array $options
      * @return bool
      */
-    public static function insert(string $tableName, array $options = []) :bool
+    public static function insert(string $table, array $options = []) :bool
     {
         $bindValues = [];
         foreach ($keys as $key) {
@@ -29,25 +29,25 @@ class Db
         $keysString = implode(', ', $keys);
         $bindValuesString = implode(', ', $bindValues);
         $params = array_combine($bindValues, $values);       
-        $sql = "INSERT INTO $tableName ($keysString) VALUES ($bindValuesString)";
-        return self::query->execute($sql, $params) ? true : false;
+        $sql = "INSERT INTO $table ($keysString) VALUES ($bindValuesString)";
+        return self::$query->execute($sql, $params) ? true : false;
     }
 
     /**
      * Select values from table
      * 
      *
-     * @param string $tableName
+     * @param string $table
      * @param array $options
      * @return array
      */
-    public static function select(string $tableName, array $options = []) :?array
+    public static function select(string $table, array $options = []) :?array
     {
         $columnList = $options['columns'] ?? '*';
         $where = $options['where'] ?? null;
         $params = $options['params'] ?? [];
         $fetchAll = $options['fetchAll'] ?? true;
-        $sql = "SELECT $columnList FROM $tableName";
+        $sql = "SELECT $columnList FROM $table";
         if ($where) {
             $sql .= " WHERE $where";
         }
@@ -57,11 +57,11 @@ class Db
     /**
      * Update values in table
      *
-     * @param string $tableName
+     * @param string $table
      * @param array $options
      * @return bool
      */
-    public static function update(string $tableName, array $options = []) :bool
+    public static function update(string $table, array $options = []) :bool
     {
         $setParts = [];
         $params = [];
@@ -71,7 +71,7 @@ class Db
             $params[":$setKey"] = $bindValue;
         }
         $setString = implode(', ', $setParts);
-        $sql = "UPDATE $tableName SET $setString";
+        $sql = "UPDATE $table SET $setString";
         if ($where) {
             $sql .= " WHERE $where";
             $params = array_merge($params, $whereParams);
@@ -83,15 +83,15 @@ class Db
      * Delete lines from table
      *
      * 
-     * @param string $tableName
+     * @param string $table
      * @param array $options
      * @return bool
      */
-    public static function delete(string $tableName, $options = []) :bool
+    public static function delete(string $table, $options = []) :bool
     {
         $where = $options['where'] ?? null;
         $params = $options['params'] ?? [];
-        $sql = "DELETE FROM $tableName";
+        $sql = "DELETE FROM $table";
         if ($where) {
             $sql .= " WHERE $where";
         }

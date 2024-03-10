@@ -6,16 +6,22 @@ use Src\Database\Connection;
 
 class Query extends Connection
 {
-    private $dbh;
+    private static \PDO $dbh;
 
     public function __construct()
     {
-        $this->dbh = Connection::getConnection();
+        self::$dbh = Connection::init();
     }
 
-    protected static function execute(string $sql, array $params, bool $fetchAll = true)
+    /**
+     * @param string $sql
+     * @param array $params
+     * @param bool $fetchAll = true
+     * @return array|bool|null
+     */
+    protected static function execute(string $sql, array $params, bool $fetchAll = true): array|bool|null
     {
-        $stmt = $this->dbh->prepare($sql);
+        $stmt = self::$dbh->prepare($sql);
         foreach ($params as $key => $value) {
             $stmt->bindValue($key, $value);
         }
@@ -23,6 +29,7 @@ class Query extends Connection
         if (stripos(trim($sql), 'SELECT') === 0) {
             return $fetchAll ? ($stmt->fetchAll() ?: null) : ($stmt->fetch() ?: null);
         }
+
         return $success;
     }
 }

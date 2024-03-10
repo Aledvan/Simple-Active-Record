@@ -2,7 +2,6 @@
 
 namespace Src\Database;
 
-use Src\Middlewares\Exceptions\DbException;
 use Config\DbConfig;
 use PDO;
 use PDOException;
@@ -11,14 +10,11 @@ use Src\Helpers\Helper;
 class Connection
 {
     private static $instance = null;
-    private $dbh;
-
-    private function __construct(){}
 
     /**
      * @return PDO
      */
-    public static function getInstance(): PDO
+    protected static function init(): PDO
     {
         if (self::$instance === null) {
             self::$instance = self::getConnection();
@@ -29,7 +25,7 @@ class Connection
     /**
      * @return PDO
      */
-    protected static function getConnection(): PDO
+    private static function getConnection(): PDO
     {
         $dsn = sprintf('%s:host=%s;port=%s;dbname=%s;charset=%s',
             Helper::getValueFromArray(DbConfig::DB_DRIVER),
@@ -40,11 +36,9 @@ class Connection
         );
 
         try {
-            $dbh = new PDO($dsn, DbConfig::DB_USER, DbConfig::DB_PASS, DbConfig::DB_OPTIONS);
-
-            return $dbh;
+            return new PDO($dsn, DbConfig::DB_USER, DbConfig::DB_PASS, DbConfig::DB_OPTIONS);
         } catch (PDOException $e) {
-            throw new DbException($e, __LINE__);
+            error_log('Database Connection Error: ' . $e->getMessage());
         }
     }
 }
