@@ -6,13 +6,6 @@ use Src\Database\Query;
 
 class Db extends Query
 {
-    private static $query;
-
-    public function __construct()
-    {
-        self::$query = new Query();
-    }
-
     /**
      * Insert new lines and values in table
      *
@@ -20,9 +13,11 @@ class Db extends Query
      * @param array $options
      * @return bool
      */
-    public static function insert(string $table, array $options = []) :bool
+    public static function insert(string $table, array $options = []): bool
     {
         $bindValues = [];
+        $keys = array_keys($options);
+        $values = array_values($options);
         foreach ($keys as $key) {
             $bindValues[] = ':' . $key;
         }
@@ -30,7 +25,7 @@ class Db extends Query
         $bindValuesString = implode(', ', $bindValues);
         $params = array_combine($bindValues, $values);       
         $sql = "INSERT INTO $table ($keysString) VALUES ($bindValuesString)";
-        return self::$query->execute($sql, $params) ? true : false;
+        return (bool)self::executeQuery($sql, $params);
     }
 
     /**
@@ -39,9 +34,9 @@ class Db extends Query
      *
      * @param string $table
      * @param array $options
-     * @return array
+     * @return array|null
      */
-    public static function select(string $table, array $options = []) :?array
+    /*public static function select(string $table, array $options = []): array|null
     {
         $columnList = $options['columns'] ?? '*';
         $where = $options['where'] ?? null;
@@ -52,7 +47,7 @@ class Db extends Query
             $sql .= " WHERE $where";
         }
         return $this->query->execute($sql, $params, $fetchAll);            
-    }
+    }*/
 
     /**
      * Update values in table
@@ -61,7 +56,7 @@ class Db extends Query
      * @param array $options
      * @return bool
      */
-    public static function update(string $table, array $options = []) :bool
+    /*public static function update(string $table, array $options = []): bool
     {
         $setParts = [];
         $params = [];
@@ -77,7 +72,7 @@ class Db extends Query
             $params = array_merge($params, $whereParams);
         }
         return $this->query->execute($sql, $params) ? true : false; 
-    }
+    }*/
 
     /**
      * Delete lines from table
@@ -87,7 +82,7 @@ class Db extends Query
      * @param array $options
      * @return bool
      */
-    public static function delete(string $table, $options = []) :bool
+    public static function delete(string $table, $options = []): bool
     {
         $where = $options['where'] ?? null;
         $params = $options['params'] ?? [];
@@ -95,6 +90,6 @@ class Db extends Query
         if ($where) {
             $sql .= " WHERE $where";
         }
-        return self::query->execute($sql, $params) ? true : false;
+        return (bool)self::executeQuery($sql, $params);
     }
 }

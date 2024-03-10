@@ -5,7 +5,7 @@ namespace Src\Database;
 use Config\DbConfig;
 use PDO;
 use PDOException;
-use Src\Helpers\Helper;
+use Src\Helper;
 
 class Connection
 {

@@ -7,10 +7,10 @@ use PDO;
 abstract class DbConfig
 {
     CONST DB_HOST = "localhost";
-    CONST DB_NAME = "tochka-acquiring";
-    CONST DB_PORT = 3360;
-    CONST DB_USER = "tochka-acquiring";
-    CONST DB_PASS = "Jtgw81![A1cdKW8J";
+    CONST DB_NAME = "db";
+    CONST DB_PORT = 3306;
+    CONST DB_USER = "root";
+    CONST DB_PASS = "";
     CONST DB_CHARSET = "utf8";
     CONST DB_DRIVER = [
         'mysql'     => true,

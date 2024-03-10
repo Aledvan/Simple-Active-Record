@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Src\Helpers;
+namespace Src;
 
 class Helper
 {
