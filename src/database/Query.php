@@ -3,6 +3,7 @@
 namespace Src\Database;
 
 use PDO;
+use PDOStatement;
 use Src\Database\Connection;
 
 class Query extends Connection
@@ -22,7 +23,7 @@ class Query extends Connection
      * @param string $sql
      * @param array $params
      * @param bool $fetchAll = true
-     * @return array|bool|null
+     * @return ?array|bool
      */
     protected static function executeQuery(string $sql, array $params, bool $fetchAll = true)
     {
@@ -41,8 +42,9 @@ class Query extends Connection
     /**
      * @param PDOStatement $stmt
      * @param array $params
+     * @return void
      */
-    private static function bindParams(PDOStatement $stmt, array $params)
+    private static function bindParams(PDOStatement $stmt, array $params): void
     {
         foreach ($params as $key => $value) {
             $stmt->bindValue($key, $value);

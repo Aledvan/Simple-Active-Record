@@ -34,9 +34,9 @@ class Db extends Query
      *
      * @param string $table
      * @param array $options
-     * @return array|null
+     * @return ?array
      */
-    /*public static function select(string $table, array $options = []): array|null
+    public static function select(string $table, array $options = []): ?array
     {
         $columnList = $options['columns'] ?? '*';
         $where = $options['where'] ?? null;
@@ -46,8 +46,8 @@ class Db extends Query
         if ($where) {
             $sql .= " WHERE $where";
         }
-        return $this->query->execute($sql, $params, $fetchAll);            
-    }*/
+        return self::executeQuery($sql, $params, $fetchAll);
+    }
 
     /**
      * Update values in table
@@ -56,14 +56,16 @@ class Db extends Query
      * @param array $options
      * @return bool
      */
-    /*public static function update(string $table, array $options = []): bool
+    public static function update(string $table, array $options = []): bool
     {
         $setParts = [];
-        $params = [];
-        foreach ($bindParams as $bindKey => $bindValue) {
-            $setKey = ltrim($bindKey, ':');
+        $where = $options['where'] ?? null;
+        $setParams = $options['params'] ?? [];
+        $whereParams = $options['whereParams'] ?? [];
+        foreach ($setParams as $setKey => $setValue) {
+            $setKey = ltrim($setKey, ':');
             $setParts[] = "$setKey = :$setKey";
-            $params[":$setKey"] = $bindValue;
+            $params[":$setKey"] = $setValue;
         }
         $setString = implode(', ', $setParts);
         $sql = "UPDATE $table SET $setString";
@@ -71,8 +73,8 @@ class Db extends Query
             $sql .= " WHERE $where";
             $params = array_merge($params, $whereParams);
         }
-        return $this->query->execute($sql, $params) ? true : false; 
-    }*/
+        return (bool)self::executeQuery($sql, $params);
+    }
 
     /**
      * Delete lines from table
@@ -82,7 +84,7 @@ class Db extends Query
      * @param array $options
      * @return bool
      */
-    public static function delete(string $table, $options = []): bool
+    public static function delete(string $table, array $options = []): bool
     {
         $where = $options['where'] ?? null;
         $params = $options['params'] ?? [];

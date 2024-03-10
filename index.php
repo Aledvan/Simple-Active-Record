@@ -7,15 +7,14 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 try {
     $options = [
-        'login' => 'Aleksey',
-        'email' => 'del@del.ru',
-        'pass' => '123',
-        'date' => date('Y-m-d H:i:s'),
-        'name' => 'Aleksey',
-        'surname' => 'Kalganov',
-        'phone' => '79284546545',
+        'where' => 'id = 4',
+        'params' => [
+            'email' => 'test@test.ru',
+            'login' => 'AntonKarton'
+        ]
     ];
-    Db::insert('t_users', $options);
+    $res = Db::update('t_users', $options);
+    var_dump($res);
 } catch (\PDOException $e) {
     echo 'Ошибка: ' . $e->getMessage();
 }
