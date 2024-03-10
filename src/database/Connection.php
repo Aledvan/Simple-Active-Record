@@ -6,6 +6,7 @@ use Src\Middlewares\Exceptions\DbException;
 use Config\DbConfig;
 use PDO;
 use PDOException;
+use Src\Helpers\Helper;
 
 class Connection
 {
@@ -31,7 +32,7 @@ class Connection
     protected static function getConnection(): PDO
     {
         $dsn = sprintf('%s:host=%s;port=%s;dbname=%s;charset=%s',
-            self::getDbDriverValue(),
+            Helper::getValueFromArray(DbConfig::DB_DRIVER),
             DbConfig::DB_HOST,
             DbConfig::DB_PORT,
             DbConfig::DB_NAME,
@@ -45,10 +46,5 @@ class Connection
         } catch (PDOException $e) {
             throw new DbException($e, __LINE__);
         }
-    }
-
-    private static function getDbDriverValue()
-    {
-        return array_search(true, DbConfig::DB_DRIVER);
     }
 }
