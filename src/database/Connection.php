@@ -14,7 +14,7 @@ class Connection
     /**
      * @return PDO
      */
-    protected static function init(): PDO
+    public static function init(): PDO
     {
         if (self::$instance === null) {
             self::$instance = self::getConnection();

@@ -2,4 +2,8 @@
 
 use Src\Database\Connection;
 
-self::$dbh = Connection::init();
+require_once __DIR__ . '/autoload.php';
+
+$dbh = Connection::init();
+
+var_dump($dbh);
