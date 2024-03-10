@@ -4,16 +4,16 @@ namespace Src\Database;
 
 use Src\Database\Connection;
 
-class Query
+class Query extends Connection
 {
     private $dbh;
 
     public function __construct()
     {
-        $this->dbh = Connection::getInstance()->getConnection();
+        $this->dbh = Connection::getConnection();
     }
 
-    public function execute(string $sql, array $params, bool $fetchAll = true)
+    protected static function execute(string $sql, array $params, bool $fetchAll = true)
     {
         $stmt = $this->dbh->prepare($sql);
         foreach ($params as $key => $value) {
