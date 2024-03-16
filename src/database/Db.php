@@ -8,10 +8,94 @@ use Src\Database\Query;
 class Db extends Query
 {
     /**
+     * Create new database or table
+     *
+     * @param string $databaseOrTable
+     * @param array $options = []
+     *
+     * @return bool
+     */
+    public static function create(string $databaseOrTable, array $options = []): bool
+    {
+        if (empty($options)) {
+            return self::createDatabase($databaseOrTable);
+        } else {
+            return self::createTable($databaseOrTable, $options);
+        }
+    }
+
+
+    private static function createDatabase(string $databaseName): bool
+    {
+        try {
+            $sql = "CREATE DATABASE $databaseName";
+            return self::executeQuery($sql);
+        } catch (PDOException $e) {
+            error_log('Error When Creating Database: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    private static function createTable(string $tableName, array $fields): bool
+    {
+        try {
+            $fieldDefinitions = '';
+            foreach ($fields as $fieldName => $fieldType) {
+                $fieldDefinitions .= "$fieldName $fieldType, ";
+            }
+            $fieldDefinitions = rtrim($fieldDefinitions, ', ');
+            $sql = "CREATE TABLE $tableName ($fieldDefinitions)";
+            return (bool) self::executeQuery($sql);
+        } catch (PDOException $e) {
+            error_log('Error When Creating Table: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Use new database
+     *
+     * @param string $database
+     *
+     * @return bool
+     */
+    public static function use(string $database): bool
+    {
+        try {
+            $sql = "USE $database";
+
+            return (bool)self::executeQuery($sql);
+        } catch (PDOException $e) {
+            error_log('Error When Using New Database: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Drop database
+     *
+     * @param string $database
+     *
+     * @return bool
+     */
+    public static function drop(string $database): bool
+    {
+        try {
+            $sql = "DROP DATABASE $database";
+
+            return (bool)self::executeQuery($sql);
+        } catch (PDOException $e) {
+            error_log('Error When Dropping Database: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Insert new lines and values in table
      *
      * @param string $table
      * @param array $options
+     *
      * @return bool
      */
     public static function insert(string $table, array $options = []): bool
@@ -31,15 +115,36 @@ class Db extends Query
             return (bool)self::executeQuery($sql, $params);
         } catch (PDOException $e) {
             error_log('Error in Db Insert Method: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Rename table
+     *
+     * @param string $oldTable
+     * @param string $newTable
+     *
+     * @return bool
+     */
+    public static function rename(string $oldTable, string $newTable): bool
+    {
+        try {
+            $sql = "RENAME TABLE $oldTable TO $newTable";
+
+            return (bool)self::executeQuery($sql);
+        } catch (PDOException $e) {
+            error_log('Error in Db Insert Method: ' . $e->getMessage());
+            return false;
         }
     }
 
     /**
      * Select values from table
-     * 
      *
      * @param string $table
      * @param array $options
+     *
      * @return ?array
      */
     public static function select(string $table, array $options = []): ?array
@@ -57,6 +162,7 @@ class Db extends Query
             return self::executeQuery($sql, $params, $fetchAll);
         } catch (PDOException $e) {
             error_log('Error in Db Select Method: ' . $e->getMessage());
+            return false;
         }
     }
 
@@ -65,6 +171,7 @@ class Db extends Query
      *
      * @param string $table
      * @param array $options
+     *
      * @return bool
      */
     public static function update(string $table, array $options = []): bool
@@ -89,15 +196,16 @@ class Db extends Query
             return (bool)self::executeQuery($sql, $params);
         } catch (PDOException $e) {
             error_log('Error in Db Update Method: ' . $e->getMessage());
+            return false;
         }
     }
 
     /**
      * Delete lines from table
      *
-     * 
      * @param string $table
      * @param array $options
+     *
      * @return bool
      */
     public static function delete(string $table, array $options = []): bool
@@ -113,6 +221,7 @@ class Db extends Query
             return (bool)self::executeQuery($sql, $params);
         } catch (PDOException $e) {
             error_log('Error in Db Delete Method: ' . $e->getMessage());
+            return false;
         }
     }
 }

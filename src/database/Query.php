@@ -21,12 +21,15 @@ class Query extends Connection
     }
 
     /**
+     * Execute Query In Database
+     *
      * @param string $sql
      * @param array $params
-     * @param bool $fetchAll = true
+     * @param bool $fetchAll
+     *
      * @return ?array|bool
      */
-    protected static function executeQuery(string $sql, array $params, bool $fetchAll = true)
+    protected static function executeQuery(string $sql, array $params = [], bool $fetchAll = true)
     {
         $stmt = self::getDbh()->prepare($sql);
         self::bindParams($stmt, $params);
@@ -43,6 +46,7 @@ class Query extends Connection
     /**
      * @param PDOStatement $stmt
      * @param array $params
+     *
      * @return void
      */
     private static function bindParams(PDOStatement $stmt, array $params): void
