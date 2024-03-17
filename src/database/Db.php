@@ -3,40 +3,55 @@ declare(strict_types=1);
 
 namespace Src\Database;
 
-use Src\Database\Query;
+use PDOException;
+use Src\Exception\DbException;
 
 class Db extends Query
 {
     /**
      * Create new database or table
      *
-     * @param string $databaseOrTable
+     * @param string $entity
      * @param array $options = []
      *
      * @return bool
      */
-    public static function create(string $databaseOrTable, array $options = []): bool
+    public static function create(string $entity, array $options = []): bool
     {
         if (empty($options)) {
-            return self::createDatabase($databaseOrTable);
+            return self::createDatabase($entity);
         } else {
-            return self::createTable($databaseOrTable, $options);
+            return self::createTable($entity, $options);
         }
     }
 
-
-    private static function createDatabase(string $databaseName): bool
+    /**
+     * Create new database
+     *
+     * @param string $database
+     *
+     * @return bool
+     */
+    private static function createDatabase(string $database): bool
     {
         try {
-            $sql = "CREATE DATABASE $databaseName";
+            $sql = "CREATE DATABASE $database";
             return self::executeQuery($sql);
         } catch (PDOException $e) {
-            error_log('Error When Creating Database: ' . $e->getMessage());
+            DbException::setError($e, 100);
             return false;
         }
     }
 
-    private static function createTable(string $tableName, array $fields): bool
+    /**
+     * Create new table
+     *
+     * @param string $table
+     * @param array $fields
+     *
+     * @return bool
+     */
+    private static function createTable(string $table, array $fields): bool
     {
         try {
             $fieldDefinitions = '';
@@ -44,10 +59,10 @@ class Db extends Query
                 $fieldDefinitions .= "$fieldName $fieldType, ";
             }
             $fieldDefinitions = rtrim($fieldDefinitions, ', ');
-            $sql = "CREATE TABLE $tableName ($fieldDefinitions)";
-            return (bool) self::executeQuery($sql);
+            $sql = "CREATE TABLE $table ($fieldDefinitions)";
+            return self::executeQuery($sql);
         } catch (PDOException $e) {
-            error_log('Error When Creating Table: ' . $e->getMessage());
+            DbException::setError($e, 101);
             return false;
         }
     }
@@ -66,8 +81,25 @@ class Db extends Query
 
             return (bool)self::executeQuery($sql);
         } catch (PDOException $e) {
-            error_log('Error When Using New Database: ' . $e->getMessage());
+            DbException::setError($e, 102);
             return false;
+        }
+    }
+
+    /**
+     * Drop database or table
+     *
+     * @param string $entity
+     * @param bool $isDropDb
+     *
+     * @return bool
+     */
+    public static function drop(string $entity, bool $isDropDb = true): bool
+    {
+        if ($isDropDb) {
+            return self::dropDatabase($entity);
+        } else {
+            return self::dropTable($entity);
         }
     }
 
@@ -78,14 +110,52 @@ class Db extends Query
      *
      * @return bool
      */
-    public static function drop(string $database): bool
+    private static function dropDatabase(string $database): bool
     {
         try {
             $sql = "DROP DATABASE $database";
 
-            return (bool)self::executeQuery($sql);
+            return self::executeQuery($sql);
         } catch (PDOException $e) {
-            error_log('Error When Dropping Database: ' . $e->getMessage());
+            DbException::setError($e, 103);
+            return false;
+        }
+    }
+
+    /**
+     * Drop table
+     *
+     * @param string $table
+     *
+     * @return bool
+     */
+    private static function dropTable(string $table): bool
+    {
+        try {
+            $sql = "DROP TABLE $table";
+
+            return self::executeQuery($sql);
+        } catch (PDOException $e) {
+            DbException::setError($e, 104);
+            return false;
+        }
+    }
+
+    /**
+     * Truncate table
+     *
+     * @param string $table
+     *
+     * @return bool
+     */
+    private static function truncate(string $table): bool
+    {
+        try {
+            $sql = "TRUNCATE TABLE $table";
+
+            return self::executeQuery($sql);
+        } catch (PDOException $e) {
+            DbException::setError($e, 104);
             return false;
         }
     }
