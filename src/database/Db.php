@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Src\Database;
 
+use Exception;
 use PDOException;
 use Src\Exception\DbException;
+use Src\Helper;
 
 class Db extends Query
 {
@@ -15,13 +17,24 @@ class Db extends Query
      * @param array $options = []
      *
      * @return bool
+     * @throws Exception
      */
-    public static function create(string $entity, array $options = []): bool
+    public static function create(string $entity, array $options): bool
     {
-        if (empty($options)) {
-            return self::createDatabase($entity);
+        if (empty($entity) || empty($options)) {
+            throw new Exception('Empty database/table or options');
+        }
+
+        $isAssociativeArray = Helper::checkAssociativeArray($options);
+        if ($isAssociativeArray) {
+            $isCreateDb = $options['isCreateDb'] ?? false;
+            if ($isCreateDb) {
+                return self::createDatabase($entity);
+            } else {
+                return self::createTable($entity, $options);
+            }
         } else {
-            return self::createTable($entity, $options);
+            throw new Exception('Invalid options format. Expecting an associative array');
         }
     }
 
@@ -47,19 +60,16 @@ class Db extends Query
      * Create new table
      *
      * @param string $table
-     * @param array $fields
+     * @param array $options
      *
      * @return bool
+     * @throws PDOException
+     * @throws Exception
      */
-    private static function createTable(string $table, array $fields): bool
+    private static function createTable(string $table, array $options): bool
     {
         try {
-            $fieldDefinitions = '';
-            foreach ($fields as $fieldName => $fieldType) {
-                $fieldDefinitions .= "$fieldName $fieldType, ";
-            }
-            $fieldDefinitions = rtrim($fieldDefinitions, ', ');
-            $sql = "CREATE TABLE $table ($fieldDefinitions)";
+            $sql = QueryBuilder::prepareDataForCreateTableQuery($table, $options);
             return self::executeQuery($sql);
         } catch (PDOException $e) {
             DbException::setError($e, 101);
@@ -73,12 +83,16 @@ class Db extends Query
      * @param string $database
      *
      * @return bool
+     * @throws Exception
      */
     public static function use(string $database): bool
     {
         try {
-            $sql = "USE $database";
+            if (empty($database)) {
+                throw new Exception('Empty database name');
+            }
 
+            $sql = "USE $database";
             return (bool)self::executeQuery($sql);
         } catch (PDOException $e) {
             DbException::setError($e, 102);
@@ -90,16 +104,27 @@ class Db extends Query
      * Drop database or table
      *
      * @param string $entity
-     * @param bool $isDropDb
+     * @param array $options
      *
      * @return bool
+     * @throws Exception
      */
-    public static function drop(string $entity, bool $isDropDb = true): bool
+    public static function drop(string $entity, array $options): bool
     {
-        if ($isDropDb) {
-            return self::dropDatabase($entity);
+        if (empty($entity) || empty($options)) {
+            throw new Exception('Empty database/table or options');
+        }
+
+        $isAssociativeArray = Helper::checkAssociativeArray($options);
+        if ($isAssociativeArray) {
+            $isDropDb = $options['isDropDb'] ?? false;
+            if ($isDropDb) {
+                return self::dropDatabase($entity);
+            } else {
+                return self::dropTable($entity);
+            }
         } else {
-            return self::dropTable($entity);
+            throw new Exception('Invalid options format. Expecting an associative array');
         }
     }
 
@@ -114,7 +139,6 @@ class Db extends Query
     {
         try {
             $sql = "DROP DATABASE $database";
-
             return self::executeQuery($sql);
         } catch (PDOException $e) {
             DbException::setError($e, 103);
@@ -133,7 +157,6 @@ class Db extends Query
     {
         try {
             $sql = "DROP TABLE $table";
-
             return self::executeQuery($sql);
         } catch (PDOException $e) {
             DbException::setError($e, 104);
@@ -147,12 +170,16 @@ class Db extends Query
      * @param string $table
      *
      * @return bool
+     * @throws Exception
      */
     private static function truncate(string $table): bool
     {
         try {
-            $sql = "TRUNCATE TABLE $table";
+            if (empty($database)) {
+                throw new Exception('Empty table name');
+            }
 
+            $sql = "TRUNCATE TABLE $table";
             return self::executeQuery($sql);
         } catch (PDOException $e) {
             DbException::setError($e, 104);
@@ -167,22 +194,25 @@ class Db extends Query
      * @param array $options
      *
      * @return bool
+     * @throws Exception
      */
-    public static function insert(string $table, array $options = []): bool
+    public static function insert(string $table, array $options): bool
     {
         try {
-            $bindValues = [];
-            $keys = array_keys($options);
-            $values = array_values($options);
-            foreach ($keys as $key) {
-                $bindValues[] = ':' . $key;
+            if (empty($table) || empty($options)) {
+                throw new Exception('Empty table name or options');
             }
-            $keysString = implode(', ', $keys);
-            $bindValuesString = implode(', ', $bindValues);
-            $params = array_combine($bindValues, $values);
-            $sql = "INSERT INTO $table ($keysString) VALUES ($bindValuesString)";
 
-            return (bool)self::executeQuery($sql, $params);
+            $isAssociativeArray = Helper::checkAssociativeArray($options);
+            if ($isAssociativeArray) {
+                $data = QueryBuilder::prepareDataForInsertQuery($table, $options);
+                $sql = $data['sql'];
+                $params = $data['params'];
+
+                return (bool)self::executeQuery($sql, $params);
+            } else {
+                throw new Exception('Invalid options format. Expecting an associative array');
+            }
         } catch (PDOException $e) {
             error_log('Error in Db Insert Method: ' . $e->getMessage());
             return false;
@@ -220,19 +250,14 @@ class Db extends Query
     public static function select(string $table, array $options = []): ?array
     {
         try {
-            $columnList = $options['columns'] ?? '*';
-            $where = $options['where'] ?? null;
             $params = $options['params'] ?? [];
             $fetchAll = $options['fetchAll'] ?? true;
-            $sql = "SELECT $columnList FROM $table";
-            if ($where) {
-                $sql .= " WHERE $where";
-            }
+            $sql = QueryBuilder::prepareDataForSelectQuery($table, $options);
 
             return self::executeQuery($sql, $params, $fetchAll);
         } catch (PDOException $e) {
             error_log('Error in Db Select Method: ' . $e->getMessage());
-            return false;
+            return NULL;
         }
     }
 

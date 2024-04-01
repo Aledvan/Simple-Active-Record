@@ -11,6 +11,7 @@ class DbException
      * @var array $errorMessages
      */
     private static array $errorMessages = [
+        001 => 'Empty data',
         100 => 'Failed to create database.',
         101 => 'Failed to create table.',
         102 => 'Failed to use database.',
@@ -25,12 +26,12 @@ class DbException
     ];
 
     /**
-     * @param array $e
+     * @param object $e
      * @param int $codeError
      *
      * @return void
      */
-    public static function setError(array $e, int $codeError): void
+    public static function setError(object $e, int $codeError): void
     {
         if (isset(self::$errorMessages[$codeError])) {
             $errorMessage = self::$errorMessages[$codeError];

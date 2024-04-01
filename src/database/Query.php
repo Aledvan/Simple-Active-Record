@@ -14,7 +14,7 @@ class Query extends Connection
     protected static function getDbh(): PDO
     {
         if (!isset(self::$dbh)) {
-            self::$dbh = Connection::init();
+            self::$dbh = Connection::getInstance();
         }
 
         return self::$dbh;
@@ -27,9 +27,9 @@ class Query extends Connection
      * @param array $params
      * @param bool $fetchAll
      *
-     * @return ?array|bool
+     * @return array|bool|null
      */
-    protected static function executeQuery(string $sql, array $params = [], bool $fetchAll = true)
+    protected static function executeQuery(string $sql, array $params = [], bool $fetchAll = true): bool|array|null
     {
         $stmt = self::getDbh()->prepare($sql);
         self::bindParams($stmt, $params);
@@ -44,6 +44,8 @@ class Query extends Connection
     }
 
     /**
+     * Bind parameters to a PDOStatement
+     *
      * @param PDOStatement $stmt
      * @param array $params
      *

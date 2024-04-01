@@ -13,4 +13,13 @@ class Helper
     {
         return array_search(true, $array);
     }
+
+    /**
+     * @param array $array
+     * @return bool
+     */
+    public static function checkAssociativeArray(array $array): bool
+    {
+        return array_keys($array) !== range(0, count($array) - 1);
+    }
 }

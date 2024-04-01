@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Src\Logging;
 
+use Src\Config\LogConfig;
+
 class Logger
 {
-    CONST LOG_DIR = __DIR__ . '/../../log/db-errors.log';
-
     /**
      * @param string $errorMessage
      *
@@ -14,6 +14,12 @@ class Logger
     */
     public static function setLog(string $errorMessage): void
     {
-        file_put_contents(self::LOG_DIR, $errorMessage, FILE_APPEND | LOCK_EX);
+        $dirLog = LogConfig::ERROR_LOG_DIR;
+        if(!file_exists($dirLog)) {
+            mkdir($dirLog, 0777, true);
+        } else {
+            $fullPath = $dirLog . date('Y-m-d') . '.log';
+            file_put_contents($fullPath, $errorMessage . PHP_EOL, FILE_APPEND);
+        }
     }
 }
