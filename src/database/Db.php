@@ -171,6 +171,7 @@ class Db extends Query
      *
      * @return bool
      * @throws Exception
+     * @throws PDOException
      */
     private static function truncate(string $table): bool
     {
