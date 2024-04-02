@@ -4,21 +4,21 @@ namespace Src\Database\Interfaces;
 
 interface iDb
 {
-    public function create($entity, $options);
+    public static function create(string $entity, array $options);
 
-    public function use($database);
+    public static function use(string $database);
     
-    public function drop($entity, $options);
+    public static function drop(string $entity, array $options);
     
-    public function truncate($table);
+    public static function truncate(string $table);
     
-    public function rename($oldTable, $newTable);
+    public static function rename(string $oldTable, string $newTable);
     
-    public function insert($table, $options);
+    public static function insert(string $table, array $options);
     
-    public function select($table, $options);
+    public static function select(string $table, array $options);
     
-    public function update($table, $options);
+    public static function update(string $table, array $options);
 
-    public function delete($table, $options);
+    public static function delete(string $table, array $options);
 }
