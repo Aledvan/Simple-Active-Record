@@ -9,13 +9,9 @@ error_reporting(E_ALL);
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-try {
-    $options = [
-        'id' => 'INT',
-        'name' => 'VARCHAR(255)',
-    ];
-    $res = Db::create('users', $options);
-    var_dump($res);
-} catch (\PDOException $e) {
-    echo 'Ошибка: ' . $e->getMessage();
-}
+$options = [
+    'id' => 'INT',
+    'name' => 'VARCHAR(255)',
+];
+$res = Db::create('users', $options);
+var_dump($res);

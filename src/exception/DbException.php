@@ -8,11 +8,11 @@ use Src\Logging\Logger;
 class DbException
 {
     /**
-     * @param mixed $errorData
+     * @param array|string $errorData
      *
      * @return void
      */
-    public static function setError(mixed $errorData): void
+    public static function setError(array|string $errorData): void
     {
         Logger::setLog('[ '.date('Y-m-d H:i:s').' | Error ]' . PHP_EOL . $errorData );
     }

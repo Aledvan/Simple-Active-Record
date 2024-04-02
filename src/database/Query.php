@@ -30,7 +30,7 @@ class Query extends Connection
      *
      * @return array|bool|null
      */
-    protected static function executeQuery(string $sql, array $params = [], bool $fetchAll = true): bool|array|null
+    protected static function executeQuery(string $sql, array $params = [], bool $fetchAll = true)
     {
         try {
             $stmt = self::getDbh()->prepare($sql);
