@@ -118,5 +118,29 @@ class QueryBuilder
             'sql' => $sql
         ];
     }
+
+    public static function prepareDataForUpdateQuery(string $table, array $options): array
+    {
+        $setParts = [];
+        $where = $options['where'] ?? null;
+        $setParams = $options['params'] ?? [];
+        $whereParams = $options['whereParams'] ?? [];
+        foreach ($setParams as $setKey => $setValue) {
+            $setKey = ltrim($setKey, ':');
+            $setParts[] = "$setKey = :$setKey";
+            $params[":$setKey"] = $setValue;
+        }
+        $setString = implode(', ', $setParts);
+        $sql = "UPDATE $table SET $setString";
+        if ($where) {
+            $sql .= " WHERE $where";
+            $params = array_merge($params, $whereParams);
+        }
+
+        return [
+            'sql' => $sql,
+            'params' => $params
+        ];
+    }
 }
 

@@ -237,22 +237,9 @@ class Db extends Query implements iDb
      */
     public static function update(string $table, array $options = []): bool
     {
-        $setParts = [];
-        $where = $options['where'] ?? null;
-        $setParams = $options['params'] ?? [];
-        $whereParams = $options['whereParams'] ?? [];
-        foreach ($setParams as $setKey => $setValue) {
-            $setKey = ltrim($setKey, ':');
-            $setParts[] = "$setKey = :$setKey";
-            $params[":$setKey"] = $setValue;
-        }
-        $setString = implode(', ', $setParts);
-        $sql = "UPDATE $table SET $setString";
-        if ($where) {
-            $sql .= " WHERE $where";
-            $params = array_merge($params, $whereParams);
-        }
-
+        $data = QueryBuilder::prepareDataForUpdateQuery($table, $options);
+        $sql = $data['sql'];
+        $params = $data['params'];
         return (bool)self::executeQuery($sql, $params);
     }
 
