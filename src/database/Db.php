@@ -47,8 +47,8 @@ class Db extends Query implements iDb
      */
     private static function createDatabase(string $database): bool
     {
-        $sql = "CREATE DATABASE $database";
-        return self::executeQuery($sql);
+        $sqlData = "CREATE DATABASE $database";
+        return (bool)self::executeQuery($sqlData);
     }
 
     /**
@@ -63,8 +63,8 @@ class Db extends Query implements iDb
      */
     private static function createTable(string $table, array $options): bool
     {
-        $sql = QueryBuilder::prepareDataForCreateTableQuery($table, $options);
-        return self::executeQuery($sql);
+        $sqlData = QueryBuilder::prepareDataForCreateTableQuery($table, $options);
+        return (bool)self::executeQuery($sqlData);
     }
 
     /**
@@ -81,8 +81,8 @@ class Db extends Query implements iDb
             throw new Exception('Empty database name');
         }
 
-        $sql = "USE $database";
-        return (bool)self::executeQuery($sql);
+        $sqlData = "USE $database";
+        return (bool)self::executeQuery($sqlData);
     }
 
     /**
@@ -122,8 +122,8 @@ class Db extends Query implements iDb
      */
     private static function dropDatabase(string $database): bool
     {
-        $sql = "DROP DATABASE $database";
-        return self::executeQuery($sql);
+        $sqlData = "DROP DATABASE $database";
+        return (bool)self::executeQuery($sqlData);
     }
 
     /**
@@ -135,8 +135,8 @@ class Db extends Query implements iDb
      */
     private static function dropTable(string $table): bool
     {
-        $sql = "DROP TABLE $table";
-        return self::executeQuery($sql);
+        $sqlData = "DROP TABLE $table";
+        return (bool)self::executeQuery($sqlData);
     }
 
     /**
@@ -146,16 +146,15 @@ class Db extends Query implements iDb
      *
      * @return bool
      * @throws Exception
-     * @throws PDOException
      */
     public static function truncate(string $table): bool
     {
-        if (empty($database)) {
+        if (empty($table)) {
             throw new Exception('Empty table name');
         }
 
-        $sql = "TRUNCATE TABLE $table";
-        return self::executeQuery($sql);
+        $sqlData = "TRUNCATE TABLE $table";
+        return (bool)self::executeQuery($sqlData);
     }
 
     /**
@@ -165,7 +164,6 @@ class Db extends Query implements iDb
      * @param array $options
      *
      * @return bool
-     * @throws PDOException
      * @throws Exception
      */
     public static function insert(string $table, array $options): bool
@@ -176,11 +174,8 @@ class Db extends Query implements iDb
 
         $isAssociativeArray = Helper::checkAssociativeArray($options);
         if ($isAssociativeArray) {
-            $data = QueryBuilder::prepareDataForInsertQuery($table, $options);
-            $sql = $data['sql'];
-            $params = $data['params'];
-
-            return (bool)self::executeQuery($sql, $params);
+            $sqlData = QueryBuilder::prepareDataForInsertQuery($table, $options);
+            return (bool)self::executeQuery($sqlData['sql'], $sqlData['params']);
         } else {
             throw new Exception('Invalid options format. Expecting an associative array');
         }
@@ -201,8 +196,8 @@ class Db extends Query implements iDb
             throw new Exception('Empty old or new table');
         }
 
-        $sql = "RENAME TABLE $oldTable TO $newTable";
-        return (bool)self::executeQuery($sql);
+        $sqlData = "RENAME TABLE $oldTable TO $newTable";
+        return (bool)self::executeQuery($sqlData);
     }
 
     /**
@@ -212,6 +207,7 @@ class Db extends Query implements iDb
      * @param array $options
      *
      * @return ?array
+     * @throws Exception
      */
     public static function select(string $table, array $options): ?array
     {
@@ -219,11 +215,8 @@ class Db extends Query implements iDb
             throw new Exception('Empty table name or options');
         }
 
-        $data = QueryBuilder::prepareDataForSelectQuery($table, $options);
-        $sql = $data['sql'];
-        $params = $data['params'];
-        $fetchAll = $data['fetchAll'];
-        return self::executeQuery($sql, $params, $fetchAll);
+        $sqlData = QueryBuilder::prepareDataForSelectQuery($table, $options);
+        return self::executeQuery($sqlData['sql'], $sqlData['params'], $sqlData['fetchAll']);
     }
 
     /**
@@ -233,13 +226,16 @@ class Db extends Query implements iDb
      * @param array $options
      *
      * @return bool
+     * @throws Exception
      */
-    public static function update(string $table, array $options = []): bool
+    public static function update(string $table, array $options): bool
     {
-        $data = QueryBuilder::prepareDataForUpdateQuery($table, $options);
-        $sql = $data['sql'];
-        $params = $data['params'];
-        return (bool)self::executeQuery($sql, $params);
+        if (empty($table) || empty($options)) {
+            throw new Exception('Empty table name or options');
+        }
+
+        $sqlData = QueryBuilder::prepareDataForUpdateQuery($table, $options);
+        return (bool)self::executeQuery($sqlData['sql'], $sqlData['params']);
     }
 
     /**
@@ -249,12 +245,15 @@ class Db extends Query implements iDb
      * @param array $options
      *
      * @return bool
+     * @throws Exception
      */
-    public static function delete(string $table, array $options = []): bool
+    public static function delete(string $table, array $options): bool
     {
-        $data = QueryBuilder::prepareDataForDeleteQuery($table, $options);
-        $sql = $data['sql'];
-        $params = $data['params'];
-        return (bool)self::executeQuery($sql, $params);
+        if (empty($table) || empty($options)) {
+            throw new Exception('Empty table name or options');
+        }
+
+        $sqlData = QueryBuilder::prepareDataForDeleteQuery($table, $options);
+        return (bool)self::executeQuery($sqlData['sql'], $sqlData['params']);
     }
 }
