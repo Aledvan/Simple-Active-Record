@@ -44,10 +44,10 @@ class Query extends Connection
             return $result;
         } catch (PDOException $e) {
             $errorData = [
+                'message' => $e->getMessage(),
                 'sql' => $sql,
                 'params' => $params,
                 'result' => $result ?? null,
-                'message' => $e->getMessage(),
                 'fetchAll' => $fetchAll ?? null
             ];
             DbException::setError($errorData);

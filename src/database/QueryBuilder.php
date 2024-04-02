@@ -58,9 +58,9 @@ class QueryBuilder
      * @param string $table
      * @param array $options
      *
-     * @return string
+     * @return array
      */
-    public static function prepareDataForSelectQuery(string $table, array $options): string
+    public static function prepareDataForSelectQuery(string $table, array $options): array
     {
         $columnList = $options['columns'] ?? '*';
         $where = $options['where'] ?? null;
@@ -92,6 +92,29 @@ class QueryBuilder
         return [
             'params' => $params,
             'fetchAll' => $fetchAll,
+            'sql' => $sql
+        ];
+    }
+
+    /**
+     * Prepare data for select query
+     *
+     * @param string $table
+     * @param array $options
+     *
+     * @return array
+     */
+    public static function prepareDataForDeleteQuery(string $table, array $options): array
+    {
+        $where = $options['where'] ?? null;
+        $params = $options['params'] ?? [];
+        $sql = "DELETE FROM $table";
+        if ($where) {
+            $sql .= " WHERE $where";
+        }
+
+        return [
+            'params' => $params,
             'sql' => $sql
         ];
     }
