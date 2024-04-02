@@ -5,6 +5,7 @@ namespace Src\Database;
 
 use Exception;
 use PDOException;
+use Src\Exception\DbException;
 use Src\Helper;
 use Src\Database\Interfaces\iDb;
 
@@ -21,20 +22,25 @@ class Db extends Query implements iDb
      */
     public static function create(string $entity, array $options): bool
     {
-        if (empty($entity) || empty($options)) {
-            throw new Exception('Empty database/table or options');
-        }
-
-        $isAssociativeArray = Helper::checkAssociativeArray($options);
-        if ($isAssociativeArray) {
-            $isCreateDb = $options['isCreateDb'] ?? false;
-            if ($isCreateDb) {
-                return self::createDatabase($entity);
-            } else {
-                return self::createTable($entity, $options);
+        try {
+            if (empty($entity) || empty($options)) {
+                throw new Exception('Empty database/table or options');
             }
-        } else {
-            throw new Exception('Invalid options format. Expecting an associative array');
+
+            $isAssociativeArray = Helper::checkAssociativeArray($options);
+            if ($isAssociativeArray) {
+                $isCreateDb = $options['isCreateDb'] ?? false;
+                if ($isCreateDb) {
+                    return self::createDatabase($entity);
+                } else {
+                    return self::createTable($entity, $options);
+                }
+            } else {
+                throw new Exception('Invalid options format. Expecting an associative array');
+            }
+        } catch (Exception $e) {
+            DbException::setError($e);
+            return false;
         }
     }
 
@@ -77,8 +83,12 @@ class Db extends Query implements iDb
      */
     public static function use(string $database): bool
     {
-        if (empty($database)) {
-            throw new Exception('Empty database name');
+        try {
+            if (empty($database)) {
+                throw new Exception('Empty database name');
+            }
+        } catch (Exception $e) {
+            DbException::setError($e);
         }
 
         $sqlData = "USE $database";
@@ -96,20 +106,25 @@ class Db extends Query implements iDb
      */
     public static function drop(string $entity, array $options): bool
     {
-        if (empty($entity) || empty($options)) {
-            throw new Exception('Empty database/table or options');
-        }
-
-        $isAssociativeArray = Helper::checkAssociativeArray($options);
-        if ($isAssociativeArray) {
-            $isDropDb = $options['isDropDb'] ?? false;
-            if ($isDropDb) {
-                return self::dropDatabase($entity);
-            } else {
-                return self::dropTable($entity);
+        try {
+            if (empty($entity) || empty($options)) {
+                throw new Exception('Empty database/table or options');
             }
-        } else {
-            throw new Exception('Invalid options format. Expecting an associative array');
+
+            $isAssociativeArray = Helper::checkAssociativeArray($options);
+            if ($isAssociativeArray) {
+                $isDropDb = $options['isDropDb'] ?? false;
+                if ($isDropDb) {
+                    return self::dropDatabase($entity);
+                } else {
+                    return self::dropTable($entity);
+                }
+            } else {
+                throw new Exception('Invalid options format. Expecting an associative array');
+            }
+        } catch (Exception $e) {
+            DbException::setError($e);
+            return false;
         }
     }
 
@@ -149,8 +164,12 @@ class Db extends Query implements iDb
      */
     public static function truncate(string $table): bool
     {
-        if (empty($table)) {
-            throw new Exception('Empty table name');
+        try {
+            if (empty($table)) {
+                throw new Exception('Empty table name');
+            }
+        } catch (Exception $e) {
+            DbException::setError($e);
         }
 
         $sqlData = "TRUNCATE TABLE $table";
@@ -168,16 +187,21 @@ class Db extends Query implements iDb
      */
     public static function insert(string $table, array $options): bool
     {
-        if (empty($table) || empty($options)) {
-            throw new Exception('Empty table name or options');
-        }
+        try {
+            if (empty($table) || empty($options)) {
+                throw new Exception('Empty table name or options');
+            }
 
-        $isAssociativeArray = Helper::checkAssociativeArray($options);
-        if ($isAssociativeArray) {
-            $sqlData = QueryBuilder::prepareDataForInsertQuery($table, $options);
-            return (bool)self::executeQuery($sqlData['sql'], $sqlData['params']);
-        } else {
-            throw new Exception('Invalid options format. Expecting an associative array');
+            $isAssociativeArray = Helper::checkAssociativeArray($options);
+            if ($isAssociativeArray) {
+                $sqlData = QueryBuilder::prepareDataForInsertQuery($table, $options);
+                return (bool)self::executeQuery($sqlData['sql'], $sqlData['params']);
+            } else {
+                throw new Exception('Invalid options format. Expecting an associative array');
+            }
+        } catch (Exception $e) {
+            DbException::setError($e);
+            return false;
         }
     }
 
@@ -192,8 +216,12 @@ class Db extends Query implements iDb
      */
     public static function rename(string $oldTable, string $newTable): bool
     {
-        if (empty($oldTable) || empty($newTable)) {
-            throw new Exception('Empty old or new table');
+        try {
+            if (empty($oldTable) || empty($newTable)) {
+                throw new Exception('Empty old or new table');
+            }
+        } catch (Exception $e) {
+            DbException::setError($e);
         }
 
         $sqlData = "RENAME TABLE $oldTable TO $newTable";
@@ -211,8 +239,12 @@ class Db extends Query implements iDb
      */
     public static function select(string $table, array $options): ?array
     {
-        if (empty($table) || empty($options)) {
-            throw new Exception('Empty table name or options');
+        try {
+            if (empty($table) || empty($options)) {
+                throw new Exception('Empty table name or options');
+            }
+        } catch (Exception $e) {
+            DbException::setError($e);
         }
 
         $sqlData = QueryBuilder::prepareDataForSelectQuery($table, $options);
@@ -230,8 +262,12 @@ class Db extends Query implements iDb
      */
     public static function update(string $table, array $options): bool
     {
-        if (empty($table) || empty($options)) {
-            throw new Exception('Empty table name or options');
+        try {
+            if (empty($table) || empty($options)) {
+                throw new Exception('Empty table name or options');
+            }
+        } catch (Exception $e) {
+            DbException::setError($e);
         }
 
         $sqlData = QueryBuilder::prepareDataForUpdateQuery($table, $options);
@@ -249,8 +285,12 @@ class Db extends Query implements iDb
      */
     public static function delete(string $table, array $options): bool
     {
-        if (empty($table) || empty($options)) {
-            throw new Exception('Empty table name or options');
+        try {
+            if (empty($table) || empty($options)) {
+                throw new Exception('Empty table name or options');
+            }
+        } catch (Exception $e) {
+            DbException::setError($e);
         }
 
         $sqlData = QueryBuilder::prepareDataForDeleteQuery($table, $options);

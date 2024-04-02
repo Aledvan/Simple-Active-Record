@@ -8,11 +8,11 @@ use Src\Config\LogConfig;
 class Logger
 {
     /**
-     * @param string $errorMessage
+     * @param mixed $errorMessage
      *
      * @return void
     */
-    public static function setLog(string $errorMessage): void
+    public static function setLog(mixed $errorMessage): void
     {
         $dirLog = LogConfig::ERROR_LOG_DIR;
         if(!file_exists($dirLog)) {

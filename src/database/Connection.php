@@ -6,6 +6,7 @@ namespace Src\Database;
 use PDO;
 use PDOException;
 use Src\config\DbConfig;
+use Src\Exception\DbException;
 use Src\Helper;
 
 class Connection
@@ -42,11 +43,7 @@ class Connection
             DbConfig::DB_CHARSET
         );
 
-        try {
-            return new PDO($dsn, DbConfig::DB_USER, DbConfig::DB_PASS, DbConfig::DB_OPTIONS);
-        } catch (PDOException $e) {
-            error_log('Database Connection Error: ' . $e->getMessage());
-        }
+        return new PDO($dsn, DbConfig::DB_USER, DbConfig::DB_PASS, DbConfig::DB_OPTIONS);
     }
 
     /**

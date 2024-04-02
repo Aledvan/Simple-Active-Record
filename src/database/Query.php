@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace Src\Database;
 
 use PDO;
+use PDOException;
 use PDOStatement;
-use Src\Database\Connection;
+use Src\Exception\DbException;
 
 class Query extends Connection
 {
@@ -44,6 +45,7 @@ class Query extends Connection
             return $result;
         } catch (PDOException $e) {
             $errorData = [
+                'dateTime' => date('Y-m-d H:i:s'),
                 'message' => $e->getMessage(),
                 'sql' => $sql,
                 'params' => $params,

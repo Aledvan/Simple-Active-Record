@@ -8,34 +8,12 @@ use Src\Logging\Logger;
 class DbException
 {
     /**
-     * @var array $errorMessages
-     */
-    private static array $errorMessages = [
-        001 => 'Empty data',
-        100 => 'Failed to create database.',
-        101 => 'Failed to create table.',
-        102 => 'Failed to use database.',
-        103 => 'Failed to drop database.',
-        104 => 'Failed to drop table.',
-        105 => 'Failed to create table.',
-        106 => 'Failed to create table.',
-        108 => 'Failed to create table.',
-        109 => 'Failed to create table.',
-        110 => 'Failed to create table.',
-        111 => 'Failed to create table.',
-    ];
-
-    /**
-     * @param object $e
-     * @param int $codeError
+     * @param mixed $errorData
      *
      * @return void
      */
-    public static function setError(object $e, int $codeError): void
+    public static function setError(mixed $errorData): void
     {
-        if (isset(self::$errorMessages[$codeError])) {
-            $errorMessage = self::$errorMessages[$codeError];
-            Logger::setLog('Error: ' . $errorMessage . ' | ' . $e->getMessage());
-        }
+        Logger::setLog('[ '.date('Y-m-d H:i:s').' | Error ]' . PHP_EOL . $errorData );
     }
 }
