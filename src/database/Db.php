@@ -5,7 +5,6 @@ namespace Src\Database;
 
 use Exception;
 use PDOException;
-use Src\Exception\DbException;
 use Src\Helper;
 use Src\Database\Interfaces\iDb;
 
