@@ -31,16 +31,28 @@ class Query extends Connection
      */
     protected static function executeQuery(string $sql, array $params = [], bool $fetchAll = true): bool|array|null
     {
-        $stmt = self::getDbh()->prepare($sql);
-        self::bindParams($stmt, $params);
-        $result = $stmt->execute();
-        if (stripos(trim($sql), 'SELECT') === 0) {
-            return $fetchAll
-                ? ($stmt->fetchAll() ?: null)
-                : ($stmt->fetch() ?: null);
-        }
+        try {
+            $stmt = self::getDbh()->prepare($sql);
+            self::bindParams($stmt, $params);
+            $result = $stmt->execute();
+            if (stripos(trim($sql), 'SELECT') === 0) {
+                return $fetchAll
+                    ? ($stmt->fetchAll() ?: null)
+                    : ($stmt->fetch() ?: null);
+            }
 
-        return $result;
+            return $result;
+        } catch (PDOException $e) {
+            $errorData = [
+                'sql' => $sql,
+                'params' => $params,
+                'result' => $result ?? null,
+                'message' => $e->getMessage(),
+                'fetchAll' => $fetchAll ?? null
+            ];
+            DbException::setError($errorData);
+            return false;
+        }
     }
 
     /**

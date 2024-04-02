@@ -49,13 +49,7 @@ class Db extends Query implements iDb
     private static function createDatabase(string $database): bool
     {
         $sql = "CREATE DATABASE $database";
-        
-        try {
-            return self::executeQuery($sql);
-        } catch (PDOException $e) {
-            DbException::setError($e, 100);
-            return false;
-        }
+        return self::executeQuery($sql);
     }
 
     /**
@@ -70,8 +64,9 @@ class Db extends Query implements iDb
      */
     private static function createTable(string $table, array $options): bool
     {
+        $sql = QueryBuilder::prepareDataForCreateTableQuery($table, $options);
+        
         try {
-            $sql = QueryBuilder::prepareDataForCreateTableQuery($table, $options);
             return self::executeQuery($sql);
         } catch (PDOException $e) {
             DbException::setError($e, 101);
