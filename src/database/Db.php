@@ -7,14 +7,15 @@ use Exception;
 use PDOException;
 use Src\Exception\DbException;
 use Src\Helper;
+use Src\Database\Interfaces\iDb;
 
-class Db extends Query
+class Db extends Query implements iDb
 {
     /**
      * Create new database or table
      *
      * @param string $entity
-     * @param array $options = []
+     * @param array $options
      *
      * @return bool
      * @throws Exception
@@ -47,8 +48,9 @@ class Db extends Query
      */
     private static function createDatabase(string $database): bool
     {
+        $sql = "CREATE DATABASE $database";
+        
         try {
-            $sql = "CREATE DATABASE $database";
             return self::executeQuery($sql);
         } catch (PDOException $e) {
             DbException::setError($e, 100);
@@ -173,7 +175,7 @@ class Db extends Query
      * @throws Exception
      * @throws PDOException
      */
-    private static function truncate(string $table): bool
+    public static function truncate(string $table): bool
     {
         try {
             if (empty($database)) {
@@ -195,6 +197,7 @@ class Db extends Query
      * @param array $options
      *
      * @return bool
+     * @throws PDOException
      * @throws Exception
      */
     public static function insert(string $table, array $options): bool
@@ -215,7 +218,7 @@ class Db extends Query
                 throw new Exception('Invalid options format. Expecting an associative array');
             }
         } catch (PDOException $e) {
-            error_log('Error in Db Insert Method: ' . $e->getMessage());
+            DbException::setError($e, 104);
             return false;
         }
     }
@@ -227,12 +230,16 @@ class Db extends Query
      * @param string $newTable
      *
      * @return bool
+     * @throws Exception
      */
     public static function rename(string $oldTable, string $newTable): bool
     {
         try {
-            $sql = "RENAME TABLE $oldTable TO $newTable";
+            if (empty($oldTable) || empty($newTable)) {
+                throw new Exception('Empty old or new table');
+            }
 
+            $sql = "RENAME TABLE $oldTable TO $newTable";
             return (bool)self::executeQuery($sql);
         } catch (PDOException $e) {
             error_log('Error in Db Insert Method: ' . $e->getMessage());
@@ -248,13 +255,17 @@ class Db extends Query
      *
      * @return ?array
      */
-    public static function select(string $table, array $options = []): ?array
+    public static function select(string $table, array $options): ?array
     {
         try {
-            $params = $options['params'] ?? [];
-            $fetchAll = $options['fetchAll'] ?? true;
-            $sql = QueryBuilder::prepareDataForSelectQuery($table, $options);
+            if (empty($table) || empty($options)) {
+                throw new Exception('Empty table name or options');
+            }
 
+            $data = QueryBuilder::prepareDataForSelectQuery($table, $options);
+            $sql = $data['sql'];
+            $params = $data['params'];
+            $fetchAll = $data['fetchAll'];
             return self::executeQuery($sql, $params, $fetchAll);
         } catch (PDOException $e) {
             error_log('Error in Db Select Method: ' . $e->getMessage());

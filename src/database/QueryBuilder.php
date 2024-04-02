@@ -71,6 +71,8 @@ class QueryBuilder
         $distinct = $options['distinct'] ?? false;
         $distinctKeyword = $distinct ? 'DISTINCT' : '';
         $sql = "SELECT $distinctKeyword $columnList FROM $table";
+        $params = $options['params'] ?? [];
+        $fetchAll = $options['fetchAll'] ?? true;
         if ($where) {
             $sql .= " WHERE $where";
         }
@@ -87,7 +89,11 @@ class QueryBuilder
             }
         }
 
-        return $sql;
+        return [
+            'params' => $params,
+            'fetchAll' => $fetchAll,
+            'sql' => $sql
+        ];
     }
 }
 
