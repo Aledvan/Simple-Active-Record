@@ -8,6 +8,7 @@ use PDOException;
 use Src\config\DbConfig;
 use Src\Exception\DbException;
 use Src\Helper;
+use Src\Database\Driver;
 
 class Connection
 {
@@ -17,7 +18,6 @@ class Connection
      * Get an instance of a database connection
      *
      * @return PDO
-     * @throws PDOException
      */
     public static function getInstance(): PDO
     {
@@ -31,23 +31,19 @@ class Connection
      * Create new connection with database
      *
      * @return PDO
-     * @throws PDOException
      */
     private static function createConnection(): PDO
     {
-        $dsn = sprintf('%s:host=%s;port=%s;dbname=%s;charset=%s',
-            Helper::getValueFromArray(DbConfig::DB_DRIVER),
-            DbConfig::DB_HOST,
-            DbConfig::DB_PORT,
-            DbConfig::DB_NAME,
-            DbConfig::DB_CHARSET
-        );
+        $activeDbDriver = Helper::getValueFromArray(DbConfig::DB_DRIVER);
+        $dsn = Driver::matchDriver($activeDbDriver);
 
         return new PDO($dsn, DbConfig::DB_USER, DbConfig::DB_PASS, DbConfig::DB_OPTIONS);
     }
 
     /**
      * Close connection
+     * 
+     * @return void
      */
     public static function close(): void
     {
