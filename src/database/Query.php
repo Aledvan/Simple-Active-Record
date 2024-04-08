@@ -7,6 +7,8 @@ use PDO;
 use PDOException;
 use PDOStatement;
 use Src\Exception\DbException;
+use Src\Logging\Logger;
+use Src\Logging\LogLevel;
 
 class Query extends Connection
 {
@@ -30,7 +32,7 @@ class Query extends Connection
      *
      * @return array|bool|null
      */
-    protected static function executeQuery(string $sql, array $params = [], bool $fetchAll = true)
+    protected static function executeQuery(string $sql, array $params = [], bool $fetchAll = true): bool|array|null
     {
         try {
             $stmt = self::getDbh()->prepare($sql);
@@ -41,6 +43,15 @@ class Query extends Connection
                     ? ($stmt->fetchAll() ?: null)
                     : ($stmt->fetch() ?: null);
             }
+
+            $data = [
+                'dateTime' => date('Y-m-d H:i:s'),
+                'sql' => $sql,
+                'params' => $params,
+                'result' => $result ?? null,
+                'fetchAll' => $fetchAll ?? null
+            ];
+            Logger::debug(LogLevel::DEBUG, '', $data);
 
             return $result;
         } catch (PDOException $e) {

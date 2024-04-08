@@ -1,0 +1,163 @@
+[ 2024-04-06 19:11:19 | Db_Error  ]
+
+{
+    "dateTime": "2024-04-06 19:11:19",
+    "message": "SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: YES)",
+    "sql": "CREATE DATABASE db_new",
+    "params": [],
+    "result": null,
+    "fetchAll": true
+}
+[ 2024-04-06 19:12:58 | Db_Error  ]
+
+{
+    "dateTime": "2024-04-06 19:12:58",
+    "message": "SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: YES)",
+    "sql": "CREATE DATABASE db_new",
+    "params": [],
+    "result": null,
+    "fetchAll": true
+}
+[ 2024-04-06 19:16:25 | Db_Error  ]
+
+{
+    "dateTime": "2024-04-06 19:16:25",
+    "message": "SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: YES)",
+    "sql": "CREATE DATABASE db_new",
+    "params": [],
+    "result": null,
+    "fetchAll": true
+}
+[ 2024-04-06 19:59:05 | Db_Error  ]
+
+{
+    "dateTime": "2024-04-06 19:59:05",
+    "message": "SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: YES)",
+    "sql": "CREATE DATABASE db_new",
+    "params": [],
+    "result": null,
+    "fetchAll": true
+}
+[ 2024-04-06 19:59:26 | Db_Error  ]
+
+{
+    "dateTime": "2024-04-06 19:59:26",
+    "message": "SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: YES)",
+    "sql": "CREATE DATABASE db_new",
+    "params": [],
+    "result": null,
+    "fetchAll": true
+}
+[ 2024-04-06 19:59:27 | Db_Error  ]
+
+{
+    "dateTime": "2024-04-06 19:59:27",
+    "message": "SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: YES)",
+    "sql": "CREATE DATABASE db_new",
+    "params": [],
+    "result": null,
+    "fetchAll": true
+}
+[ 2024-04-06 20:03:10 | Db_Error  ]
+
+{
+    "dateTime": "2024-04-06 20:03:10",
+    "message": "SQLSTATE[HY000]: General error: 1007 Can't create database 'db_new'; database exists",
+    "sql": "CREATE DATABASE db_new",
+    "params": [],
+    "result": null,
+    "fetchAll": true
+}
+[ 2024-04-06 20:03:11 | Db_Error  ]
+
+{
+    "dateTime": "2024-04-06 20:03:11",
+    "message": "SQLSTATE[HY000]: General error: 1007 Can't create database 'db_new'; database exists",
+    "sql": "CREATE DATABASE db_new",
+    "params": [],
+    "result": null,
+    "fetchAll": true
+}
+[ 2024-04-06 20:03:21 | Db_Error  ]
+
+{
+    "dateTime": "2024-04-06 20:03:21",
+    "message": "SQLSTATE[HY000]: General error: 1007 Can't create database 'db_new'; database exists",
+    "sql": "CREATE DATABASE db_new",
+    "params": [],
+    "result": null,
+    "fetchAll": true
+}
+[ 2024-04-06 20:03:39 | Db_Error  ]
+
+PDOException: SQLSTATE[HY000]: General error: 1007 Can't create database 'db_new'; database exists in C:\OSPanel\domains\simple-orm\src\database\Query.php:40
+Stack trace:
+#0 C:\OSPanel\domains\simple-orm\src\database\Query.php(40): PDOStatement->execute()
+#1 C:\OSPanel\domains\simple-orm\src\database\Db.php(57): Src\Database\Query::executeQuery()
+#2 C:\OSPanel\domains\simple-orm\src\database\Db.php(34): Src\Database\Db::createDatabase()
+#3 C:\OSPanel\domains\simple-orm\index.php(16): Src\Database\Db::create()
+#4 {main}
+[ 2024-04-06 20:03:39 | Db_Error  ]
+
+PDOException: SQLSTATE[HY000]: General error: 1007 Can't create database 'db_new'; database exists in C:\OSPanel\domains\simple-orm\src\database\Query.php:40
+Stack trace:
+#0 C:\OSPanel\domains\simple-orm\src\database\Query.php(40): PDOStatement->execute()
+#1 C:\OSPanel\domains\simple-orm\src\database\Db.php(57): Src\Database\Query::executeQuery()
+#2 C:\OSPanel\domains\simple-orm\src\database\Db.php(34): Src\Database\Db::createDatabase()
+#3 C:\OSPanel\domains\simple-orm\index.php(16): Src\Database\Db::create()
+#4 {main}
+[ 2024-04-06 20:03:40 | Db_Error  ]
+
+PDOException: SQLSTATE[HY000]: General error: 1007 Can't create database 'db_new'; database exists in C:\OSPanel\domains\simple-orm\src\database\Query.php:40
+Stack trace:
+#0 C:\OSPanel\domains\simple-orm\src\database\Query.php(40): PDOStatement->execute()
+#1 C:\OSPanel\domains\simple-orm\src\database\Db.php(57): Src\Database\Query::executeQuery()
+#2 C:\OSPanel\domains\simple-orm\src\database\Db.php(34): Src\Database\Db::createDatabase()
+#3 C:\OSPanel\domains\simple-orm\index.php(16): Src\Database\Db::create()
+#4 {main}
+[ 2024-04-06 20:03:40 | Db_Error  ]
+
+PDOException: SQLSTATE[HY000]: General error: 1007 Can't create database 'db_new'; database exists in C:\OSPanel\domains\simple-orm\src\database\Query.php:40
+Stack trace:
+#0 C:\OSPanel\domains\simple-orm\src\database\Query.php(40): PDOStatement->execute()
+#1 C:\OSPanel\domains\simple-orm\src\database\Db.php(57): Src\Database\Query::executeQuery()
+#2 C:\OSPanel\domains\simple-orm\src\database\Db.php(34): Src\Database\Db::createDatabase()
+#3 C:\OSPanel\domains\simple-orm\index.php(16): Src\Database\Db::create()
+#4 {main}
+[ 2024-04-06 20:03:40 | Db_Error  ]
+
+PDOException: SQLSTATE[HY000]: General error: 1007 Can't create database 'db_new'; database exists in C:\OSPanel\domains\simple-orm\src\database\Query.php:40
+Stack trace:
+#0 C:\OSPanel\domains\simple-orm\src\database\Query.php(40): PDOStatement->execute()
+#1 C:\OSPanel\domains\simple-orm\src\database\Db.php(57): Src\Database\Query::executeQuery()
+#2 C:\OSPanel\domains\simple-orm\src\database\Db.php(34): Src\Database\Db::createDatabase()
+#3 C:\OSPanel\domains\simple-orm\index.php(16): Src\Database\Db::create()
+#4 {main}
+[ 2024-04-06 20:03:40 | Db_Error  ]
+
+PDOException: SQLSTATE[HY000]: General error: 1007 Can't create database 'db_new'; database exists in C:\OSPanel\domains\simple-orm\src\database\Query.php:40
+Stack trace:
+#0 C:\OSPanel\domains\simple-orm\src\database\Query.php(40): PDOStatement->execute()
+#1 C:\OSPanel\domains\simple-orm\src\database\Db.php(57): Src\Database\Query::executeQuery()
+#2 C:\OSPanel\domains\simple-orm\src\database\Db.php(34): Src\Database\Db::createDatabase()
+#3 C:\OSPanel\domains\simple-orm\index.php(16): Src\Database\Db::create()
+#4 {main}
+[ 2024-04-06 20:05:03 | Db_Error  ]
+
+PDOException: SQLSTATE[HY000]: General error: 1007 Can't create database 'db_new'; database exists in C:\OSPanel\domains\simple-orm\src\database\Query.php:40
+Stack trace:
+#0 C:\OSPanel\domains\simple-orm\src\database\Query.php(40): PDOStatement->execute()
+#1 C:\OSPanel\domains\simple-orm\src\database\Db.php(57): Src\Database\Query::executeQuery()
+#2 C:\OSPanel\domains\simple-orm\src\database\Db.php(34): Src\Database\Db::createDatabase()
+#3 C:\OSPanel\domains\simple-orm\index.php(16): Src\Database\Db::create()
+#4 {main}
+[ 2024-04-06 20:16:15 | Db_Error  ]
+
+{
+    "dateTime": "2024-04-06 20:16:15",
+    "message": "SQLSTATE[HY000]: General error: 1007 Can't create database 'db_new_1'; database exists",
+    "sql": "CREATE DATABASE db_new_1",
+    "params": [],
+    "result": null,
+    "fetchAll": true
+}

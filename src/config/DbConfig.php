@@ -10,20 +10,13 @@ abstract class DbConfig
     CONST DB_NAME = "db";
     CONST DB_PORT = 3306;
     CONST DB_USER = "root";
-    CONST DB_PASS = "1";
+    CONST DB_PASS = "";
     CONST DB_CHARSET = "utf8";
     CONST DB_DRIVER = [
         'mysql'     => true,
         'pgsql'     => false,
-        'cubrid'    => false,
-        'dblib'     => false,
-        'firebird'  => false,
-        'ibm'       => false,
-        'informix'  => false,
+        'mssql'     => false,
         'sqlsrv'    => false,
-        'oci'       => false,
-        'odbc'      => false,
-        'sqlite'    => false,
     ];
 
     CONST DB_OPTIONS = [

@@ -8,22 +8,15 @@ abstract class Driver
 {
     public static function matchDriver($driver)
     {
-        return match($activeDbDriver) {
-            'pgsql'     => self::getPostgreSQLDriver();
-            'cubrid'    => self::getCubridDriver();
-            'dblib'     => self::getpostgreSQLDriver();
-            'firebird'  => self::getFirebirdDriver();
-            'ibm'       => self::getIbmDriver();
-            'informix'  => self::getInformixDriver();
-            'sqlsrv'    => self::getMsSQLDriver();
-            'oci'       => self::getOracleDriver();
-            'odbc'      => self::getpostgreSQLDriver();
-            'sqlite'    => self::getpostgreSQLDriver();
-            default     => self::getMySQLDriver();
-        }
+        return match($driver) {
+            'pgsql'     => self::getPostgreSQLDriver(),
+            'mssql'     => self::getMicrosoftSQLServerDriver(),
+            'sqlsrv'    => self::getSQLServerDriver(),
+            default     => self::getMySQLDriver(),
+        };
     }
 
-    private static function receiveDriver($driver)
+    private static function receiveDriverDefault($driver): string
     {
         return sprintf('%s:host=%s;port=%s;dbname=%s;charset=%s',
             $driver,
@@ -34,13 +27,33 @@ abstract class Driver
         );
     }
 
-    public static function getMySQLDriver()
+    private static function receiveDriverSQLServer($driver): string
     {
-        return self::receiveDriver('mysql');
+        return sprintf('%s:Server=%s;%s;Database=%s',
+            $driver,
+            DbConfig::DB_HOST,
+            DbConfig::DB_PORT,
+            DbConfig::DB_NAME
+        );
     }
 
-    public static function getPostgreSQLDriver()
+    private static function getMySQLDriver(): string
     {
-        return self::receiveDriver('pgsql');
+        return self::receiveDriverDefault('mysql');
+    }
+
+    private static function getPostgreSQLDriver(): string
+    {
+        return self::receiveDriverDefault('pgsql');
+    }
+
+    private static function getSQLServerDriver(): string
+    {
+        return self::receiveDriverSQLServer('sqlsrv');
+    }
+
+    private static function getMicrosoftSQLServerDriver(): string
+    {
+        return self::receiveDriverDefault('mssql');
     }
 }

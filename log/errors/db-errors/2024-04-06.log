@@ -1,0 +1,79 @@
+[ 2024-04-06 08:44:30 | Error ]
+Array
+[ 2024-04-06 08:44:32 | Error ]
+Array
+[ 2024-04-06 08:44:33 | Error ]
+Array
+[ 2024-04-06 08:44:42 | Error ]
+Array
+[ 2024-04-06 08:44:42 | Error ]
+Array
+[ 2024-04-06 08:44:42 | Error ]
+Array
+[ 2024-04-06 08:44:43 | Error ]
+Array
+[ 2024-04-06 08:44:43 | Error ]
+Array
+[ 2024-04-06 08:44:43 | Error ]
+Array
+[ 2024-04-06 08:45:35 | Error ]
+Array
+[ 2024-04-06 08:45:36 | Error ]
+Array
+[ 2024-04-06 08:45:36 | Error ]
+Array
+[ 2024-04-06 08:45:36 | Error ]
+Array
+[ 2024-04-06 08:45:45 | Error ]
+Array
+[ 2024-04-06 09:11:00 | Error ]
+Array
+[ 2024-04-06 09:12:50 | Error ]
+{
+    "dateTime": "2024-04-06 09:12:50",
+    "message": "SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: YES)",
+    "sql": "CREATE TABLE users (id INT, name VARCHAR(255))",
+    "params": [],
+    "result": null,
+    "fetchAll": true
+}
+[ 2024-04-06 09:14:01 | Error ]
+{
+    "dateTime": "2024-04-06 09:14:01",
+    "message": "SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: YES)",
+    "sql": "CREATE DATABASE db_new",
+    "params": [],
+    "result": null,
+    "fetchAll": true
+}
+[ 2024-04-06 09:14:02 | Error ]
+{
+    "dateTime": "2024-04-06 09:14:02",
+    "message": "SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: YES)",
+    "sql": "CREATE DATABASE db_new",
+    "params": [],
+    "result": null,
+    "fetchAll": true
+}
+[ 2024-04-06 09:24:01 | Db Error ]
+{
+    "dateTime": "2024-04-06 09:24:01",
+    "message": "SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: YES)",
+    "sql": "CREATE DATABASE db_new",
+    "params": [],
+    "result": null,
+    "fetchAll": true
+}
+[ 2024-04-06 09:24:55 | Database Error ]
+{
+    "dateTime": "2024-04-06 09:24:55",
+    "message": "SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: YES)",
+    "sql": "CREATE DATABASE db_new",
+    "params": [],
+    "result": null,
+    "fetchAll": true
+}
+
+Array
+
+Array

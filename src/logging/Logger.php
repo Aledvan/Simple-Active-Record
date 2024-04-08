@@ -3,23 +3,29 @@ declare(strict_types=1);
 
 namespace Src\Logging;
 
-use Src\Config\LogConfig;
-
-class Logger
+class Logger extends LogWriter implements iLogger
 {
     /**
-     * @param mixed $errorMessage
+     * @param string $logLevel
+     * @param string $message
+     * @param array|object|string $context
      *
      * @return void
-    */
-    public static function setLog(mixed $errorMessage): void
+     */
+    public static function error(string $logLevel, string $message, array|object|string $context): void
     {
-        $dirLog = LogConfig::ERROR_LOG_DIR;
-        if(!file_exists($dirLog)) {
-            mkdir($dirLog, 0777, true);
-        } else {
-            $fullPath = $dirLog . date('Y-m-d') . '.log';
-            file_put_contents($fullPath, $errorMessage . PHP_EOL, FILE_APPEND);
-        }
+        LogWriter::setLog($logLevel, $message, $context);
+    }
+
+    /**
+     * @param string $logLevel
+     * @param string $message
+     * @param array|object|string $context
+     *
+     * @return void
+     */
+    public static function debug(string $logLevel, string $message, array|object|string $context): void
+    {
+        LogWriter::setLog($logLevel, $message, $context);
     }
 }
