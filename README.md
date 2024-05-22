@@ -17,6 +17,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 ### Creating Database
 ```php
 <?php
+
 $options = [
     'isCreateDb' => true
 ];
@@ -27,6 +28,7 @@ $result = Db::create('Database_Name', $options);
 ### Creating Table
 ```php
 <?php
+
 $options = [
     'id' => 'AUTO-INCREMENT PRIMARY KEY',
     'name' => 'VARCHAR(50)',
@@ -40,6 +42,7 @@ $result = Db::create('Table_Name', $options);
 ### Dropping Database
 ```php
 <?php
+
 $options = [
     'isDropDb' => true
 ];
@@ -50,6 +53,7 @@ $result = Db::drop('Database_Name', $options);
 ### Dropping Table
 ```php
 <?php
+
 $options = [
     'isDropDb' => false
 ];
@@ -60,6 +64,7 @@ $result = Db::drop('Table_Name', $options);
 ### Use Database
 ```php
 <?php
+
 $result = Db::use('Database_Name');
 
 ```
@@ -67,6 +72,7 @@ $result = Db::use('Database_Name');
 ### Truncate Table
 ```php
 <?php
+
 $result = Db::truncate('Table_Name');
 
 ```
