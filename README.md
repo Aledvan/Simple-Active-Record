@@ -1,3 +1,8 @@
+use \Src\Database\Connection;
+use \Src\Database\Db;
+
+require_once DIR . '/vendor/autoload.php';
+
 # Simple-Active-Record
 
 Uses PDO. Support multiple databases: MSSQL, SQLite, PostgreSQL, MySQL and etc.
@@ -14,13 +19,13 @@ use \Src\Database\Db;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-# Creating Database
+## Creating Database
 $options = [
     'isCreateDb' => true
 ];
 $result = Db::create('Database_Name', $options);
 
-# Creating Table
+## Creating Table
 $options = [
     'id' => 'AUTO-INCREMENT PRIMARY KEY',
     'name' => 'VARCHAR(50)',
@@ -29,21 +34,21 @@ $options = [
 ];
 $result = Db::create('Table_Name', $options);
 
-# Dropping Database
+## Dropping Database
 $options = [
     'isDropDb' => true
 ];
 $result = Db::drop('Database_Name', $options);
 
-# Dropping Table
+## Dropping Table
 $options = [
     'isDropDb' => false
 ];
 $result = Db::drop('Table_Name', $options);
 
-# Use Database
+## Use Database
 $result = Db::use('Database_Name');
 
-# Truncate Table
+## Truncate Table
 $result = Db::truncate('Table_Name');
 
