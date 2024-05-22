@@ -8,66 +8,60 @@ use Src\Exception\DbException;
 
 class DbTest extends TestCase
 {
-    private $db;
-
-    protected function setUp(): void
-    {
-        $this->db = new Db();
-    }
-
     public function testCreateDatabase(): void
     {
-        $entity = 'test_database';
-        $options = ['isCreateDb' => true];
+        $databaseName = 'test_database';
+        $options = [
+            'isCreateDb' => true
+        ];
 
-        $this->assertTrue(Db::create($entity, $options));
+        $this->assertTrue(Db::create($databaseName, $options));
     }
 
     public function testCreateTable(): void
     {
-        $entity = 'test_table';
+        $tableName = 'test_table';
         $options = [
-            'columns' => [
-                'id' => 'int',
-                'name' => 'varchar(255)',
-            ],
+            'id' => 'INT AUTO_INCREMENT PRIMARY KEY',
+            'name' => 'VARCHAR(50)',
+            'age' => 'INT'
         ];
 
-        $this->assertTrue(Db::create($entity, $options));
+        $this->assertTrue(Db::create($tableName, $options));
     }
 
     public function testUseDatabase(): void
     {
-        $database = 'test_database';
+        $databaseName = 'test_database';
 
-        $this->assertTrue(Db::use($database));
+        $this->assertTrue(Db::use($databaseName));
     }
 
     public function testDropDatabase(): void
     {
-        $entity = 'test_database';
+        $databaseName = 'test_database';
         $options = ['isDropDb' => true];
 
-        $this->assertTrue(Db::drop($entity, $options));
+        $this->assertTrue(Db::drop($databaseName, $options));
     }
 
     public function testDropTable(): void
     {
-        $entity = 'test_table';
+        $tableName = 'test_table';
 
-        $this->assertTrue(Db::drop($entity, []));
+        $this->assertTrue(Db::drop($tableName, []));
     }
 
     public function testTruncateTable(): void
     {
-        $table = 'test_table';
+        $tableName = 'test_table';
 
-        $this->assertTrue(Db::truncate($table));
+        $this->assertTrue(Db::truncate($tableName));
     }
 
     public function testInsert(): void
     {
-        $table = 'test_table';
+        $tableName = 'test_table';
         $options = [
             'columns' => [
                 'id' => 1,
@@ -75,7 +69,7 @@ class DbTest extends TestCase
             ],
         ];
 
-        $this->assertTrue(Db::insert($table, $options));
+        $this->assertTrue(Db::insert($tableName, $options));
     }
 
     public function testRenameTable(): void
@@ -96,8 +90,7 @@ class DbTest extends TestCase
             ],
         ];
 
-        $result = Db::select($table, $options);
-        $this->assertIsArray($result);
+        $this->assertIsArray(Db::select($table, $options));
     }
 
     public function testUpdate(): void
