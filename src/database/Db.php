@@ -87,12 +87,14 @@ class Db extends Query implements iDb
             if (empty($database)) {
                 throw new Exception('Empty database name');
             }
+
+            $sqlData = "USE $database";
+            return (bool)self::executeQuery($sqlData);
+
         } catch (Exception $e) {
             DbException::setError($e);
+            return false;
         }
-
-        $sqlData = "USE $database";
-        return (bool)self::executeQuery($sqlData);
     }
 
     /**
@@ -168,12 +170,13 @@ class Db extends Query implements iDb
             if (empty($table)) {
                 throw new Exception('Empty table name');
             }
+
+            $sqlData = "TRUNCATE TABLE $table";
+            return (bool)self::executeQuery($sqlData);
         } catch (Exception $e) {
             DbException::setError($e);
+            return false;
         }
-
-        $sqlData = "TRUNCATE TABLE $table";
-        return (bool)self::executeQuery($sqlData);
     }
 
     /**
@@ -220,12 +223,13 @@ class Db extends Query implements iDb
             if (empty($oldTable) || empty($newTable)) {
                 throw new Exception('Empty old or new table');
             }
-        } catch (Exception $e) {
-            DbException::setError($e);
-        }
+            $sqlData = "RENAME TABLE $oldTable TO $newTable";
+            return (bool)self::executeQuery($sqlData);
 
-        $sqlData = "RENAME TABLE $oldTable TO $newTable";
-        return (bool)self::executeQuery($sqlData);
+        } catch (Exception $e) {
+            DbException::setError($e);]
+            return false;
+        }
     }
 
     /**
@@ -243,12 +247,13 @@ class Db extends Query implements iDb
             if (empty($table) || empty($options)) {
                 throw new Exception('Empty table name or options');
             }
+            $sqlData = QueryBuilder::prepareDataForSelectQuery($table, $options);
+            return self::executeQuery($sqlData['sql'], $sqlData['params'], $sqlData['fetchAll']);
+
         } catch (Exception $e) {
             DbException::setError($e);
+            return null;
         }
-
-        $sqlData = QueryBuilder::prepareDataForSelectQuery($table, $options);
-        return self::executeQuery($sqlData['sql'], $sqlData['params'], $sqlData['fetchAll']);
     }
 
     /**
@@ -266,12 +271,13 @@ class Db extends Query implements iDb
             if (empty($table) || empty($options)) {
                 throw new Exception('Empty table name or options');
             }
+            $sqlData = QueryBuilder::prepareDataForUpdateQuery($table, $options);
+            return (bool)self::executeQuery($sqlData['sql'], $sqlData['params']);
+
         } catch (Exception $e) {
             DbException::setError($e);
+            return false;
         }
-
-        $sqlData = QueryBuilder::prepareDataForUpdateQuery($table, $options);
-        return (bool)self::executeQuery($sqlData['sql'], $sqlData['params']);
     }
 
     /**
@@ -289,11 +295,12 @@ class Db extends Query implements iDb
             if (empty($table) || empty($options)) {
                 throw new Exception('Empty table name or options');
             }
+            $sqlData = QueryBuilder::prepareDataForDeleteQuery($table, $options);
+            return (bool)self::executeQuery($sqlData['sql'], $sqlData['params']);
+
         } catch (Exception $e) {
             DbException::setError($e);
+            return false;
         }
-
-        $sqlData = QueryBuilder::prepareDataForDeleteQuery($table, $options);
-        return (bool)self::executeQuery($sqlData['sql'], $sqlData['params']);
     }
 }
