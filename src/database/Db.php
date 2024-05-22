@@ -227,7 +227,7 @@ class Db extends Query implements iDb
             return (bool)self::executeQuery($sqlData);
 
         } catch (Exception $e) {
-            DbException::setError($e);]
+            DbException::setError($e);
             return false;
         }
     }
