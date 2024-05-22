@@ -77,3 +77,5 @@ $result = Db::truncate('Table_Name');
 
 ```
 
+Another examples for using will add later...
+
